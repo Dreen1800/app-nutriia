@@ -1,0 +1,40 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: nerai
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: app-nutri
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: app-api
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs22.x
+  architecture: arm64
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+
+build:
+  esbuild:
+    minify: true
+    sourcemap: false
+
+package:
+  individually: true
+
+functions:
+  signin:
+    handler: src/fuctions/signin.handler
+    events:
+      - httpApi:
+          path: /signin
+          method: post
+
+  signup:
+    handler: src/fuctions/signup.handler
+    events:
+      - httpApi:
+          path: /signup
+          method: post
