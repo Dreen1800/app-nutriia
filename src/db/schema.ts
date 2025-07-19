@@ -1,4 +1,4 @@
-import { date, integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { date, integer, json, pgEnum, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
@@ -17,4 +17,24 @@ export const usersTable = pgTable('users', {
   proteins: integer().notNull(),
   carbohydrates: integer().notNull(),
   fats: integer().notNull(),
+});
+
+export const mealsStats = pgEnum('meals_stats', ['uploading', 'queued', 'processing', 'success', 'failed']);
+
+export const mealsInputType = pgEnum('meals_input_type', ['audio', 'picture']);
+
+export const mealsTable = pgTable('meals', {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => usersTable.id, {onDelete: "cascade"}),
+  stats: mealsStats().notNull(),
+  inputType: mealsInputType("input_type").notNull(),
+  inputFileKey: varchar("input_file_key", { length: 255 }).notNull(),
+
+
+  name: varchar({ length: 255 }).notNull(),
+  icon: varchar({ length: 100 }).notNull(),
+  foods: json(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });

@@ -46,3 +46,31 @@ functions:
       - httpApi:
           path: /me
           method: get
+
+  createMeal:
+    handler: src/fuctions/createMeal.handler
+    events:
+      - httpApi:
+          path: /meals
+          method: post
+
+  listMeals:
+    handler: src/fuctions/listMeals.handler
+    events:
+      - httpApi:
+          path: /meals
+          method: get 
+
+  getMealById:
+    handler: src/fuctions/getMealById.handler
+    events:
+      - httpApi:
+          path: /meals/{mealId}
+          method: get
+
+resources:
+  Resources:
+    uploadBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: nerai-appnutri-upload
