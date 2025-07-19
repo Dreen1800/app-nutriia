@@ -15,6 +15,7 @@ provider:
   architecture: arm64
   environment:
     DATABASE_URL: ${env:DATABASE_URL}
+    JWT_SECRET: ${env:JWT_SECRET}
 
 build:
   esbuild:
@@ -38,3 +39,10 @@ functions:
       - httpApi:
           path: /signup
           method: post
+
+  me:
+    handler: src/fuctions/me.handler
+    events:
+      - httpApi:
+          path: /me
+          method: get

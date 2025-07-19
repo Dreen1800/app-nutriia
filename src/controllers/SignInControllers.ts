@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { HttpRequest, HttpResponse } from "../types/Http";
-import { badRequest, created, unauthorized } from "../utils/http";
+import { badRequest, created, ok, unauthorized } from "../utils/http";
 import { db } from "../db";
 import { usersTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
+import { signAccessTokenFor } from "../lib/jwt";
 
 
 const schema = z.object({
@@ -43,8 +45,8 @@ export class SignInControllers {
             });
         }
 
-        return created({
-            data,
-        });
+        const accessToken = signAccessTokenFor(user.id);
+
+        return ok({accessToken});
     }
 }
